@@ -8,7 +8,7 @@ db = mysql.connector.connect(
     host="localhost",
     user="root",  # Ваш пользователь
     password="1234",  # Ваш пароль
-    database="conference_manager"
+    database="conference_manager",
 )
 
 @app.route('/')
@@ -38,6 +38,27 @@ def register():
         
         return redirect(url_for('index'))
     return render_template('register.html')
+
+@app.route('/users')
+def users():
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM Users")
+    users = cursor.fetchall()
+    cursor.close()
+    return render_template('users.html', users = users)
+
+def add_user_via_console():
+    print("Adding new user:")
+    name = input("Enter name: ")
+    email = input("Enter email: ")
+    password = input("Enter password: ")
+    role = input("organizer, speaker, participant or admin?")
+        
+    cursor = db.cursor()
+    cursor.execute("INSERT INTO Users (name, email, password, role) VALUES (%s, %s, %s, %s)", (name, email, password, role))
+    db.commit()
+    cursor.close()
+    print(f"User {name} added successfully.")
 
 @app.route('/surveys/<int:event_id>')
 def surveys(event_id):

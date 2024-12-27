@@ -4,7 +4,7 @@ import mysql.connector
 db_connection = mysql.connector.connect(
     host="localhost",
     user="root",  # Укажите ваш логин
-    password="password"  # Укажите ваш пароль
+    password="1234" # Укажите ваш парол
 )
 
 cursor = db_connection.cursor()

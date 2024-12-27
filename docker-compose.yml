@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:8
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: conference_manager
+    ports:
+      - "3307:3307"
+    networks:
+      - backend
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: always
+
+  app:
+    build: .
+    container_name: conference_manager_app
+    environment:
+      MYSQL_HOST: mysql_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATAVASE: conference_manager
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - backend
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  backend:
+    external: true
